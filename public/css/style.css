@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /**
  * CoreUI - Open Source Bootstrap Admin Template
  * @version v1.0.0-alpha.6
@@ -8920,3 +8921,132 @@ hr.transparent {
     border-right-color: #f86c6b; }
   *[dir="rtl"] .callout-success {
     border-right-color: #4dbd74; }
+
+.device-grid-item {
+  padding-left: 15px;
+  padding-right: 15px; }
+
+.device-card {
+  min-width: 350px;
+  max-width: 500px;
+  /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/ }
+
+.device-card-title {
+  margin-bottom: 0px; }
+
+.device-card-body {
+  padding-top: 3px; }
+
+.device-card-action {
+  height: 20px;
+  padding-right: 0px; }
+
+.device-card-action > a {
+  padding-right: 5px;
+  padding-left: 5px;
+  color: #7f7f7f;
+  font-size: 12pt; }
+
+.ipaddress {
+  font-size: 10pt !important;
+  font-family: "Courier"; }
+
+.card-title {
+  margin-bottom: 0px;
+  font-size: 11pt; }
+
+.nav-item {
+  cursor: pointer; }
+
+.object-grid-item {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 0px; }
+
+.object-card {
+  min-width: 400px;
+  max-width: 500px;
+  margin-bottom: 10px; }
+
+.object-card > .card-header {
+  height: 30px;
+  padding: 5px 8px 0px 15px;
+  background-color: #f7f7f7 !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #263238;
+  font-size: 9pt; }
+
+.object-card > .card-block {
+  padding: 10px; }
+
+.lwm2m-btn {
+  border-radius: 4px;
+  padding: 0px 3px 1px 2px;
+  margin-left: 2px;
+  margin-right: 2px;
+  font-size: 8pt; }
+
+.resource-row-name {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 10pt;
+  color: #777777;
+  padding-top: 3px; }
+
+.resource-row-value {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 10pt;
+  color: #777777;
+  text-align: right;
+  padding-top: 3px; }
+
+.device-card-body {
+  border-radius: 2px;
+  padding: 10px; }
+
+.device-details ul {
+  list-style: none;
+  padding: 0px;
+  margin: 0;
+  padding-top: 9px; }
+
+.device-details li {
+  /*display: block;*/
+  padding: 4px;
+  border: 1px solid #DDDDDD;
+  margin-bottom: 16px;
+  border-radius: 3px;
+  margin-right: 3px;
+  margin-left: 3px;
+  margin-top: 5px; }
+
+.device-details li > label {
+  display: block;
+  float: left;
+  margin-top: -20px;
+  background: #FFFFFF;
+  height: 10px;
+  padding: 2px 5px 0px 5px;
+  color: #B9B9B9;
+  font-size: 8pt; }
+
+.device-details li > div {
+  display: block;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 10pt;
+  color: #2e2e2e; }
+
+.device-details li > span {
+  background: #F3F3F3;
+  display: block;
+  padding: 3px;
+  margin: 0 -9px -9px -9px;
+  text-align: center;
+  color: #C0C0C0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px; }
+
+.device-details .progress .progress-bar {
+  height: 1.1rem !important;
+  line-height: 1.2rem !important; }

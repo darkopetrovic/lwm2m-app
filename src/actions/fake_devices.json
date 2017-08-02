@@ -1,0 +1,76 @@
+{
+  "devices": [
+    {
+      "id": 242,
+      "name": "Smart Device 1",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 250,
+      "name": "Smart Device 2",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 254,
+      "name": "Smart Device 3",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 1,
+      "name": "Smart Device 5",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 2,
+      "name": "Smart Device 6",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 3,
+      "name": "Smart Device 7",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 4,
+      "name": "Smart Device 8",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 5,
+      "name": "Smart Device 9",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    },
+    {
+      "id": 6,
+      "name": "Smart Device ",
+      "address": "2001:db8:85a3:8d3:1319:8a2e:370:7348",
+      "lifetime": "6000",
+      "binding": "U",
+      "creationDate": "2017-07-30T23:56:57.035Z"
+    }
+  ]
+}
