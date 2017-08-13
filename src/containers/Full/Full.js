@@ -9,6 +9,11 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 import Devices from '../../views/Devices/';
 import DeviceDetails from '../../views/DeviceDetails/';
+import ObjectsDb from '../../views/ObjectsDb/';
+import ResourcesList from "../../components/ObjectsDb/ResourcesList";
+import DeviceModels from "../../views/DeviceModels";
+
+
 
 class Full extends Component {
     render() {
@@ -16,7 +21,7 @@ class Full extends Component {
           <div className="app">
             <Header />
             <div className="app-body">
-              <Sidebar {...this.props}/>
+              <Sidebar />
               <main className="main">
                 <Breadcrumb />
                 <div className="container-fluid">
@@ -24,6 +29,9 @@ class Full extends Component {
                     <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                     <Route path="/devices/:id" name="Devices" component={DeviceDetails}/>
                     <Route path="/devices" name="Devices" component={Devices}/>
+                    <Route path="/objectsdb" name="ObjectsDb" component={ObjectsDb}/>
+                    <Route path="/resourcesdb" name="Resources" component={ResourcesList}/>
+                    <Route path="/devicemodels" name="Device Models" component={DeviceModels}/>
                     <Redirect from="/" to="/dashboard"/>
                   </Switch>
                 </div>

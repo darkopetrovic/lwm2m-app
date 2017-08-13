@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchDevice, fetchObjects, fetchResources, getResourceValue } from "../../actions";
+import { fetchDevice, readResourceValue } from "../../actions";
+import { fetchObjects, fetchResources } from "../../actions/actions_objectdb";
 import { bindActionCreators } from "redux";
 
 import DeviceInfos from '../../components/Device/DeviceInfos';
 import TabsObjects from '../../components/Device/TabsObjects';
 
-import { Card, CardHeader, CardTitle, CardBlock, CardText, Container, Row, Col, Progress } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
+import {fetchDeviceObservations} from "../../actions/actions_observations";
+import ObservationsList from "../../components/Device/ObservationsList";
 
 class DeviceDetails extends Component {
     constructor(props) {
@@ -19,23 +22,19 @@ class DeviceDetails extends Component {
         this.props.fetchDevice(id);
         this.props.fetchObjects();
         this.props.fetchResources();
+        this.props.fetchDeviceObservations(id);
     }
 
     render() {
-        const { device } = this.props;
-
-        if (!device) {
-            return <div>Loading...</div>;
-        }
-
         return (
           <div className="animated fadeIn">
               <Row>
                   <Col xs="4">
                       <DeviceInfos />
+                      <ObservationsList />
                   </Col>
                   <Col xs="8">
-                    <TabsObjects/>
+                      <TabsObjects/>
                   </Col>
               </Row>
           </div>
@@ -43,18 +42,9 @@ class DeviceDetails extends Component {
     }
 }
 
-function mapStateToProps({devices, objects, resources}, ownProps) {
-    return {
-        device: devices.active,
-        objects: objects,
-        resources: resources
-    };
-}
-
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchDevice, fetchObjects, fetchResources, getResourceValue }, dispatch);
+    return bindActionCreators({ fetchDevice, fetchObjects, fetchResources, fetchDeviceObservations }, dispatch);
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeviceDetails);
+export default connect(null, mapDispatchToProps)(DeviceDetails);

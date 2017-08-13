@@ -7,14 +7,10 @@ export const FETCH_DEVICES  = "FETCH_DEVICES";
 export const FETCH_DEVICE   = "FETCH_DEVICE";
 export const DELETE_DEVICE  = "DELETE_DEVICE";
 export const GET_RESOURCE_VALUE  = "GET_RESOURCE_VALUE";
-
-export const FETCH_OBJECTS  = "FETCH_OBJECTS";
-export const FETCH_OBJECT   = "FETCH_OBJECT";
-export const DELETE_OBJECT  = "DELETE_OBJECT";
-
-export const FETCH_RESOURCES    = "FETCH_RESOURCES";
-export const FETCH_RESOURCE    = "FETCH_RESOURCE";
-export const DELETE_RESOURCE   = "DELETE_RESOURCE";
+export const WRITE_RESOURCE_VALUE  = "WRITE_RESOURCE_VALUE";
+export const OBSERVE_RESOURCE_VALUE  = "OBSERVE_RESOURCE_VALUE";
+export const CANCEL_OBSERVE_RESOURCE  = "CANCEL_OBSERVE_RESOURCE";
+export const DISCOVER_OBJECT_RESOURCES  = "DISCOVER_OBJECT_RESOURCES";
 
 const ROOT_URL = "http://localhost:5000/api";
 
@@ -47,30 +43,66 @@ export function deleteDevice(id, callback) {
     };
 }
 
-export function getResourceValue(did, oid, iid, rid) {
+export function readResourceValue(did, oid, iid, rid) {
     const request = axios.get(`${ROOT_URL}/read/${did}/${oid}/${iid}/${rid}`);
 
     return {
         type: GET_RESOURCE_VALUE,
-        payload: request
+        payload: {
+            promise: request,
+            data: {did, oid, iid, rid}
+        }
     };
 }
 
-export function fetchObjects() {
-    const request = axios.get(`${ROOT_URL}/objects`);
+export function observeResourceValue(did, oid, iid, rid) {
+    const request = axios.get(`${ROOT_URL}/observe/${did}/${oid}/${iid}/${rid}`);
 
     return {
-        type: FETCH_OBJECTS,
-        payload: request
+        type: OBSERVE_RESOURCE_VALUE,
+        payload: {
+            promise: request,
+            data: {did, oid, iid, rid}
+        }
     };
 }
 
-
-export function fetchResources() {
-    const request = axios.get(`${ROOT_URL}/resources`);
+export function cancelObserveResource(did, oid, iid, rid) {
+    const request = axios.delete(`${ROOT_URL}/observe/${did}/${oid}/${iid}/${rid}`);
 
     return {
-        type: FETCH_RESOURCES,
-        payload: request
+        type: CANCEL_OBSERVE_RESOURCE,
+        payload: {
+            promise: request,
+            data: {did, oid, iid, rid}
+        }
     };
 }
+
+export function writeResourceValue(did, oid, iid, rid, data) {
+    const request = axios.post(`${ROOT_URL}/write/${did}/${oid}/${iid}/${rid}`, {
+        value: data
+    });
+
+    return {
+        type: WRITE_RESOURCE_VALUE,
+        payload: {
+            promise: request,
+            data: {did, oid, iid, rid}
+        }
+    };
+}
+
+export function discoverObjectResource(did, oid, iid) {
+    const request = axios.get(`${ROOT_URL}/discover/${did}/${oid}/${iid}`);
+
+    return {
+        type: DISCOVER_OBJECT_RESOURCES,
+        payload: {
+            promise: request,
+            data: {did, oid, iid}
+        }
+    };
+}
+
+

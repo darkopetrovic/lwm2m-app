@@ -1,121 +1,92 @@
 import _ from 'lodash';
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import classnames from 'classnames';
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
-
+import { Tab } from 'semantic-ui-react'
+import { createSelector } from 'reselect'
 import ObjectList from './ObjectsList';
+
+import {makeDebugger} from '../../utils/debug';
+const debug = makeDebugger('device-tabsobjects');
 
 class TabsObjects extends Component {
     constructor(props) {
         super(props);
 
-        this.tabs = [];
-
-        this.toggle = this.toggle.bind(this);
+        this.panes = [];
         this.state = {
             activeTab: 0
         };
     }
 
-
-    toggle(tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    }
-
-    renderTabsNav(){
-        return _.map(this.tabs, (tab, i) => {
-            return (
-              <NavItem key={i}>
-                  <NavLink
-                    className={classnames({ active: this.state.activeTab === i })}
-                    onClick={() => { this.toggle(i); }}
-                  >
-                      <i className={tab.icon} /> {tab.title} &nbsp;
-                  </NavLink>
-              </NavItem>
-            );
-        });
-    }
-
-    renderTabsContent(){
-        return _.map(this.tabs, (tab, i) => {
-            return (
-              <TabPane tabId={i} key={i}>
-                  <ObjectList objects={tab.objects}/>
-              </TabPane>
-            );
-        });
-    }
-
-
     render() {
-        this.tabs = [];
-        const { device, objects } = this.props;
+        debug("render()");
 
-        if (!device || !objects) {
+        this.tabs = [];
+        const { device_objects_id, objects } = this.props;
+
+        if (!device_objects_id || !objects) {
             return <div>Loading...</div>;
         }
 
 
         // Group device's objects into separate tabs
-        _.map(device.objects, object => {
+        _.map(device_objects_id, oid => {
 
             // find the device's object inside the global objects array
             // to find the owner of the object
-            let obj = _.find(objects, {id: object.id.toString()});
+            let obj = _.find(objects, {id: oid.toString()});
 
             if(obj){
                 // Search if owner isn't already in the tabs configuration
-                if(!_.find(this.tabs, {id: obj.owner.id})){
-                    this.tabs.push({
+                if(!_.find(this.panes, {id: obj.owner.id})){
+                    this.panes.push({
                         id: obj.owner.id,
-                        title: obj.owner.name,
-                        icon: 'icon-basket-loaded',
-                        objects: []
-                    })
+                        menuItem: {
+                            key: obj.owner.id,
+                            icon: 'users',
+                            content: obj.owner.name
+                        },
+                        objects_ids: []
+                    });
                 }
 
-                let tab = _.find(this.tabs, {id: obj.owner.id});
-
-                // create new object to not mutate the state
-                const nobj = Object.assign({}, object);
-
-                // Create one object per instance
-                _.each(nobj.instances, inst => {
-                    nobj.resources = inst.resources;
-                    nobj.instanceId = inst.id;
-                    tab.objects.push(nobj)
-                });
-
+                let tab = _.find(this.panes, {id: obj.owner.id});
+                tab.objects_ids.push(parseInt(obj.id));
             }
-
-
         });
+
+        _.each(this.panes, pane => {
+            pane.render = () => <ObjectList selected_objects_ids={pane.objects_ids}/>
+        });
+
+        debug('Rendered tabs:', this.panes);
 
         return (
           <div>
-              <Nav tabs>
-                  {this.renderTabsNav()}
-              </Nav>
-              <TabContent activeTab={this.state.activeTab}>
-                  {this.renderTabsContent()}
-              </TabContent>
+              <Tab menu={{ pointing: true }} panes={this.panes} />
           </div>
         );
     }
 }
 
-function mapStateToProps({devices, objects}) {
-    return {
-        device: devices.active,
-        objects: objects
-    };
-}
+const getObjectsTabs = createSelector (
+  state => state.devices.active.objects_id,
+  state => state.objects.list,
+  (device_objects_id, objects) => {
+      return {
+          device_objects_id: device_objects_id,
+          objects: objects
+      };
+  }
+);
+
+
+const mapStateToProps = (state) => {
+    if(!state.devices.active){
+        return;
+    }
+    return getObjectsTabs(state);
+};
 
 export default connect(mapStateToProps)(TabsObjects);
 

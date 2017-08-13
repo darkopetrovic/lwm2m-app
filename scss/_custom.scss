@@ -1,5 +1,57 @@
 // Here you can add other styles
 
+body {
+  font-size: 1rem !important;
+  background-color: #fff;
+}
+
+.main {
+  overflow-y: hidden;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+//.main .container-fluid {
+//  padding: 0 40px;
+//}
+
+// small fix for the container for the moment. Used for ResourcesRow
+.container {
+  padding-left: 0;
+}
+
+.table {
+  border-top: 0 !important;
+}
+
+.ui.very.basic.table thead tr th {
+  border-top: 0 !important;
+}
+
+.ui.labeled.icon.button.danger {
+  color: rgba(255, 0, 0, 0.8) !important;
+}
+
+.ui.labeled.icon.button>.icon.red {
+  background-color: rgba(255, 0, 0, 0.05);
+  color: rgba(255, 0, 0, 0.5) !important;
+}
+
+.ui.selection.dropdown {
+  min-width: 0;
+}
+
+
+// *******************************************************************
+
+.actionsLabel {
+  background-color: #fff !important;
+  border-top: 1px solid #eeeeee !important;
+}
+
 .device-grid-item {
   padding-left: 15px;
   padding-right: 15px;
@@ -49,24 +101,32 @@
 .object-grid-item {
   padding-left: 5px;
   padding-right: 5px;
-  padding-bottom: 0px;
+  padding-bottom: 8px;
 }
 
 .object-card {
-  min-width: 400px;
-  max-width: 500px;
+  min-width: 250px;
+  max-width: 440px;
   //border-radius: 6px;
-  margin-bottom: 10px;
+  //margin-bottom: 30px;
+  ;
+}
+
+.object-card > .label {
+  font-size: 10pt !important;
+  padding: 6px 8px 6px 10px !important;
+  vertical-align: middle;
+  line-height: 1.4 !important;
+  background-color: #f9f9f9 !important;
 }
 
 .object-card > .card-header {
   height: 30px;
   padding: 5px 8px 0px 15px;
-  background-color: #f7f7f7 !important;
-  text-transform: uppercase;
+  //background-color: #f7f7f7 !important;
   letter-spacing: 2px;
-  color: #263238;
-  font-size: 9pt;
+  color: #000000;
+  font-size: 10pt;
   //border-radius: 6px 6px 0px 0px;
 }
 
@@ -76,32 +136,42 @@
 
 .lwm2m-btn {
   border-radius: 4px;
-  padding: 0px 3px 1px 2px;
-  margin-left: 2px;
-  margin-right: 2px;
+  padding: 1px 3px 0 2px;
+  margin: 0 2px 0 2px;
   font-size: 8pt;
 }
 
+.inline-compact-button {
+  padding: 0;
+  line-height: 0;
+}
+
+.inline-compact-button .ui.icon.button {
+  padding: 4px;
+  //line-height: 0;
+}
+
 .resource-row-name {
-  font-family: "Lucida Console", Monaco, monospace;
-  font-size: 10pt;
-  color: #777777;
-  padding-top: 3px;
+  font-size: 9pt;
+  color: #5058c5;
+  //padding-top: 4px;
+  letter-spacing: 1px;
+}
+
+.resource-observed {
+  background-color: rgba(251, 189, 8, 0.4);
+  //color: #f7f7f7;
 }
 
 .resource-row-value {
-  font-family: "Lucida Console", Monaco, monospace;
-  font-size: 10pt;
+  font-size: 9pt;
   color: #777777;
-  text-align: right;
-  padding-top: 3px;
 }
 
 
 
 
 .device-card-body {
-  border-radius:2px;
   padding:10px;
 }
 
@@ -114,28 +184,31 @@
 .device-details li{
   /*display: block;*/
   padding: 4px;
-  border:1px solid #DDDDDD;
+  border:1px solid #e2e2e2;
   margin-bottom: 16px;
   border-radius: 3px;
   margin-right: 3px;
   margin-left: 3px;
   margin-top: 5px;
+  height: 30px;
 }
 
 .device-details li > label{
   display: block;
   float: left;
-  margin-top: -20px;
+  margin-top: -18px;
   background: #FFFFFF;
   height: 10px;
   padding: 2px 5px 0px 5px;
-  color: #B9B9B9;
-  font-size: 8pt;
+  color: #9b9b9b;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .device-details li > div{
   display: block;
-  font-family: "Lucida Console", Monaco, monospace;
+  //font-family: "Lucida Console", Monaco, monospace;
   font-size: 10pt;
   color: #2e2e2e;
 }
@@ -154,4 +227,143 @@
 .device-details .progress .progress-bar  {
   height: 1.1rem !important;
   line-height: 1.2rem !important;
+}
+
+.progress {
+  margin-bottom: 0 !important;
+  padding-bottom: 0;
+}
+
+// --------------------- OBJECTS DISPLAY ------------------------------
+
+// Icon of objects (in the square)
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+  }
+
+  to {
+    margin-left: 0%;
+  }
+}
+.object-list-row {
+  min-width: 600px;
+  max-width: 100%;
+
+  /*
+  opacity: 0;
+  animation: 300ms appear 30ms ease-in-out forwards;
+  transition: all 333ms ease-in-out;
+  transition-delay: 100ms;*/
+
+/*
+  animation-duration: 1s;
+  animation-name: slidein;*/
+
+}
+
+
+
+.object-list-row .header i.icon {
+  opacity: 0.3 !important;
+  padding-left: 8px !important;
+  padding-top: 4px !important;
+}
+
+.overflowNone {
+  overflow-anchor: none;
+}
+
+.loader {
+}
+
+
+
+.fadeIn-enter {
+  opacity: 0;
+  transition: 0.3s ease-in-out all;
+}
+
+.fadeIn-enter.fadeIn-enter-active {
+  opacity: 1;
+}
+
+
+.slideIn-enter {
+  animation-duration: 0.5s;
+  animation-name: slidein;
+}
+
+.resources-container {
+  width: 500px;
+  overflow-y: scroll !important;
+  height:400px !important;
+  //border: 1px solid grey;
+}
+
+.resources-popup-container {
+  max-width: 600px;
+  min-width: 500px;
+  min-height: 500px;
+}
+
+.popup-object-edit {
+  border-top: 2px solid #2185d0 !important;
+  border-bottom: 2px solid #2185d0 !important;
+  max-width: 800px;
+  min-width: 600px;
+}
+
+.container-object-edit {
+  width: 500px;
+  //overflow-y: scroll !important;
+  //height:400px !important;
+}
+
+i.large.icon {
+  font-size: 1.1em !important;
+}
+
+.actions_dropdown .text-danger span {
+  color: red;
+}
+
+.actions_dropdown .text-danger i {
+  color: red;
+}
+
+.add-resource-selector {
+  background-color: #fff !important;
+}
+
+.no-shadow {
+  box-shadow: 0 0 0 0 !important;
+  -webkit-box-shadow: 0 0 0 0 !important;
+}
+
+.input-search {
+  height: 36px; // to match Dropdown height
+}
+
+// the look same as the Dropdown field
+.ui[class*="left icon"].input>input {
+  padding-left: 50px !important;
+}
+
+.input-search > input {
+  padding-left: 50px !important;
+  background-color: red;
+}
+
+.input-search .icon {
+  background-color: rgba(0, 0, 0, 0.1)
 }
