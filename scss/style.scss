@@ -39,14 +39,14 @@
 // Components
 @import "core/aside";
 //@import "core/avatars";
-//@import "core/badge";
+@import "core/badge";
 @import "core/breadcrumb-menu";
 @import "core/breadcrumb";
 @import "core/buttons";
-//@import "core/callout";
-//@import "core/card";
-//@import "core/charts";
-//@import "core/dropdown";
+@import "core/callout";
+@import "core/card";
+@import "core/charts";
+@import "core/dropdown";
 @import "core/footer";
 @import "core/grid";
 @import "core/input-group";
@@ -56,9 +56,9 @@
 @import "core/navbar";
 //@import "core/progress";
 @import "core/sidebar";
-//@import "core/switches";
-//@import "core/tables";
-//@import "core/widgets";
+@import "core/switches";
+@import "core/tables";
+@import "core/widgets";
 
 // Layout Options
 @import "core/layout";

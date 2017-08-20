@@ -5,13 +5,12 @@ import dotProp from 'dot-prop-immutable';
 
 const initState = {
     list: {},
-    isFetching: false
+    isFetching: false,
+    selected: null
 };
 
 
 export default function(state = initState, action) {
-
-    console.log(action);
 
     let actionId = null;
 
@@ -37,6 +36,9 @@ export default function(state = initState, action) {
         case `${UPDATE_ACTION}_${FULFILLED}`:
             actionId = action.payload.data.action.id;
             return dotProp.merge(state, `list.${actionId}`, {...action.payload.data.action});
+
+        case 'SELECT_ACTION':
+            return {...state, 'selected': action.payload};
 
         default:
             return state;

@@ -8,12 +8,16 @@ import { Button, Card, Image } from 'semantic-ui-react'
 import {Segment, Progress, Item, List, Icon} from 'semantic-ui-react';
 
 import {makeDebugger} from '../../utils/debug';
+import Moment from "react-moment";
+import LifetimeBar, {computeRemainingLifetime} from "./LifetimeBar";
 const debug = makeDebugger('device-devicecard');
 
 class DeviceCard extends Component {
     render() {
-        debug('render()');
         const {device} = this.props;
+        debug('render()', device);
+
+        const remainingLifetime = computeRemainingLifetime(device);
 
         return (
           <Card className="device-card">
@@ -22,20 +26,23 @@ class DeviceCard extends Component {
                       {device.name}
                   </Card.Header>
                   <Card.Meta>
-                      {/*{device.address}*/}
-                      Smart Device
+                      #{device.id} ({device.type})
                   </Card.Meta>
                   <Card.Description>
                       <List>
-                          <List.Item icon='globe' content='2001:db8:85a3:8d3:1319:8a2e:370:7348' />
-                          <List.Item icon='marker' content='New York, NY' />
-
-                          <List.Item icon='mail' content={<a href='mailto:jack@semantic-ui.com'>jack@semantic-ui.com</a>} />
+                          <List.Item icon='globe' content={device.address} />
+                          <List.Item icon='plug' content={device.binding} />
+                          <List.Item>
+                              <List.Icon name='history'/>
+                              <List.Content>
+                                <Moment format="DD/MM/YYYY HH:mm:ss">{device.lastSeen}</Moment>
+                              </List.Content>
+                          </List.Item>
                       </List>
                   </Card.Description>
               </Card.Content>
               <Card.Content extra>
-                  <Progress value='4' total='5' color='green' size="small" />
+                  <LifetimeBar remaining={parseInt(remainingLifetime)} total={parseInt(device.lifetime)}/>
               </Card.Content>
 
               <Card.Content extra>

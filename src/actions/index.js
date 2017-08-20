@@ -11,6 +11,8 @@ export const WRITE_RESOURCE_VALUE  = "WRITE_RESOURCE_VALUE";
 export const OBSERVE_RESOURCE_VALUE  = "OBSERVE_RESOURCE_VALUE";
 export const CANCEL_OBSERVE_RESOURCE  = "CANCEL_OBSERVE_RESOURCE";
 export const DISCOVER_OBJECT_RESOURCES  = "DISCOVER_OBJECT_RESOURCES";
+export const READ_OBJECT_RESOURCES  = "READ_OBJECT_RESOURCES";
+export const FETCH_QUEUED_REQUESTS  = "FETCH_QUEUED_REQUESTS";
 
 const ROOT_URL = "http://localhost:5000/api";
 
@@ -93,7 +95,7 @@ export function writeResourceValue(did, oid, iid, rid, data) {
     };
 }
 
-export function discoverObjectResource(did, oid, iid) {
+export function discoverObjectResources(did, oid, iid) {
     const request = axios.get(`${ROOT_URL}/discover/${did}/${oid}/${iid}`);
 
     return {
@@ -105,4 +107,23 @@ export function discoverObjectResource(did, oid, iid) {
     };
 }
 
+export function readObjectResources(did, oid, iid) {
+    const request = axios.get(`${ROOT_URL}/read/${did}/${oid}/${iid}`);
 
+    return {
+        type: READ_OBJECT_RESOURCES,
+        payload: {
+            promise: request,
+            data: {did, oid, iid}
+        }
+    };
+}
+
+export function fetchQueuedRequests(id) {
+    const request = axios.get(`${ROOT_URL}/queuedrequests`);
+
+    return {
+        type: FETCH_QUEUED_REQUESTS,
+        payload: request
+    };
+}

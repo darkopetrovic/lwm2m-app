@@ -3,8 +3,6 @@ import _ from 'lodash';
 
 export const FormValidation = validations => (values, props) => {
 
-    console.log("PROPS:", props);
-
     const errors = {};
     for (let field in validations) {
         let value = values[field];

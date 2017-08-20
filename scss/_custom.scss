@@ -24,7 +24,7 @@ body {
 }
 
 .table {
-  border-top: 0 !important;
+  //border-top: 0 !important;
 }
 
 .ui.very.basic.table thead tr th {
@@ -44,6 +44,13 @@ body {
   min-width: 0;
 }
 
+.ui.button {
+  background-color: #f5f3eb;
+  //white-space: nowrap;
+  text-overflow: ellipsis;
+  //overflow: hidden;
+  //border: 1px solid #eae8e0;
+}
 
 // *******************************************************************
 
@@ -55,6 +62,7 @@ body {
 .device-grid-item {
   padding-left: 15px;
   padding-right: 15px;
+  padding-bottom: 15px;
 }
 
 .device-card {
@@ -98,15 +106,34 @@ body {
   cursor: pointer;
 }
 
+/* Dynamic columns for objects display */
+//@media screen and (min-width: 1px) and (max-width: 1200px){
+//  .object-grid-item {
+//    width: 100%;
+//    padding-left: 2px;
+//    padding-right: 2px;
+//    padding-bottom: 8px;
+//  }
+//}
+//
+//@media screen and (min-width:1200px) and (max-width: 9999px){
+//  .object-grid-item {
+//    width: 50%;
+//    padding-left: 2px;
+//    padding-right: 2px;
+//    padding-bottom: 8px;
+//  }
+//}
+
 .object-grid-item {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 2px;
+  padding-right: 2px;
   padding-bottom: 8px;
 }
 
 .object-card {
-  min-width: 250px;
-  max-width: 440px;
+  min-width: 300px;
+  //max-width: 440px;
   //border-radius: 6px;
   //margin-bottom: 30px;
   ;
@@ -168,6 +195,13 @@ body {
   color: #777777;
 }
 
+.resource-row-value span {
+  float: right;
+}
+
+.mandatory_resource{
+  font-weight: bold;
+}
 
 
 
@@ -256,8 +290,8 @@ body {
   }
 }
 .object-list-row {
-  min-width: 600px;
-  max-width: 100%;
+  //min-width: 600px;
+  //max-width: 100%;
 
   /*
   opacity: 0;
@@ -286,6 +320,12 @@ body {
 .loader {
 }
 
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 .fadeIn-enter {
@@ -321,12 +361,6 @@ body {
   border-bottom: 2px solid #2185d0 !important;
   max-width: 800px;
   min-width: 600px;
-}
-
-.container-object-edit {
-  width: 500px;
-  //overflow-y: scroll !important;
-  //height:400px !important;
 }
 
 i.large.icon {
@@ -367,3 +401,21 @@ i.large.icon {
 .input-search .icon {
   background-color: rgba(0, 0, 0, 0.1)
 }
+.lwm2m_path {
+  font-family: "Courier New", monospace;
+  font-size: 8pt !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.app-fouter > div > div {
+  margin-left: 200px !important;
+}
+
+.title_queued_request {
+  border: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid $gray-lighter !important;
+  height: 44px !important;
+}
+

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import {Row, Col} from 'reactstrap';
 import ResourcesList from "../../components/ObjectsDb/ResourcesList";
+import {Grid} from "semantic-ui-react";
 
 class RersourcesView extends Component {
 
@@ -9,14 +9,17 @@ class RersourcesView extends Component {
 
         return (
           <div className="animated fadeIn">
-              <Row>
-                  <Col className="overflowNone">
-                      <ResourcesList per_page="8"/>
-                  </Col>
-                  <Col>
+              <Grid>
+                  <Grid.Row>
+                      <Grid.Column className="overflowNone" width={10}>
+                          <ResourcesList />
+                      </Grid.Column>
 
-                  </Col>
-              </Row>
+                      <Grid.Column width={6}>
+
+                      </Grid.Column>
+                  </Grid.Row>
+              </Grid>
           </div>
         )
     }

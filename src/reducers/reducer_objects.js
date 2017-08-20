@@ -1,15 +1,16 @@
 import _ from "lodash";
 import {
-    FETCH_OBJECTS, FETCH_OBJECT, DELETE_OBJECT, SELECT_OBJECT
+    FETCH_OBJECTS, FETCH_OBJECT, DELETE_OBJECT, SELECT_OBJECT, UPDATE_OBJECT, ADD_OBJECT
 } from "../actions/actions_objectdb";
 import { PENDING, FULFILLED, REJECTED } from 'redux-promise-middleware'
 import { LOCATION_CHANGE } from 'react-router-redux';
 import {FETCH_OWNERS} from "../actions/actions_owners";
+import dotProp from 'dot-prop-immutable';
 
 const initState = {
     list: {},
     isFetching: false,
-    selectedObject: null,
+    selected: null,
     owners: {}
 };
 
@@ -39,7 +40,18 @@ export default function(state = initState, action) {
             };
 
         case SELECT_OBJECT:
-            return {...state, selectedObject: action.payload};
+            return {...state, selected: action.payload};
+
+        case `${ADD_OBJECT}_${FULFILLED}`:
+            return dotProp.set(state, `list`,
+              list => ({...list, [action.payload.data.object.id]: action.payload.data.object}) );
+
+        case `${UPDATE_OBJECT}_${FULFILLED}`:
+            let object = action.payload.data.object;
+            return dotProp.merge(state, `list.${object.id}`, {...object});
+
+        case `${DELETE_OBJECT}_${FULFILLED}`:
+            return dotProp.delete(state, `list.${action.payload.data.object.id}`);
 
         case LOCATION_CHANGE: {
             return {};

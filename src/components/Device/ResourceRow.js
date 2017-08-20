@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
@@ -25,6 +26,7 @@ class ResourceRow extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
+        debug('componentWillReceiveProps()', nextProps);
         const {isObserved} = nextProps.row_state;
         // TODO: handle error here too
         if(isObserved === false){
@@ -61,11 +63,11 @@ class ResourceRow extends Component {
 
     render() {
         const did = this.props.row_state.did;
-        const {oid, iid, rid} = this.props;
+        const {oid, iid, rid, queued_operations} = this.props;
 
-        debug('render()', oid, iid, rid);
+        debug('render()', oid, iid, rid, this.props.row_state);
 
-        const {resource, value, isFetching, isObserved, error} = this.props.row_state;
+        const {resource, value, isFetching, error, isObserved} = this.props.row_state;
 
         // change the observe button color when the resource is observed
         const btnObserveClass = classNames({
@@ -82,19 +84,28 @@ class ResourceRow extends Component {
             opacity: 0
         };
 
+        const mantaroyClass = classNames({
+            'mandatory_resource': resource.mandatory
+        });
+
+        if(!resource){
+            return null;
+        }
+
+
         return (
           <Grid.Row key={resource.id} style={{paddingTop: '0', paddingBottom: '3px'}}>
               <Grid.Column width={6} className="resource-row-name">
                   <Popup
-                    trigger={<div>{resource.shortname}</div>}
-                    header={resource.shortname}
+                    trigger={<div className={mantaroyClass}>{resource.shortname || resource.id}</div>}
+                    header={resource.shortname || resource.id}
                     content={'/' + oid + '/' + iid + '/' + rid}
                     size='small'
                   />
               </Grid.Column>
-              <Grid.Column width={4}>
+              <Grid.Column width={4} textAlign="left" style={{paddingRight: '0'}}>
 
-                  {resource.access.indexOf('R') >= 0 && (
+                  {resource.access && resource.access.indexOf('R') >= 0 && (
                     <span>
 
                         <button type="button"
@@ -138,7 +149,7 @@ class ResourceRow extends Component {
                     </span>
                   )}
 
-                  {resource.access.indexOf('W') >= 0 && (
+                  {resource.access && resource.access.indexOf('W') >= 0 && (
                       <Popup
                         key={'PopupWrite-' + resource.id}
                         trigger={
@@ -166,7 +177,7 @@ class ResourceRow extends Component {
                       </Popup>
                   )}
 
-                  {resource.access.indexOf('E') >= 0 && (
+                  {resource.access && resource.access.indexOf('E') >= 0 && (
                       <button type="button" className="btn btn-secondary btn-sm lwm2m-btn">
                           <i className="icon-control-play"/>
                       </button>
@@ -175,14 +186,15 @@ class ResourceRow extends Component {
               </Grid.Column>
               <Grid.Column width={6} textAlign="right" className="resource-row-value">
                   <Loader loaded={!isFetching} {...loader_config}>
-                      {error ? (
-                        ( error.name === 'REQUEST_IN_QUEUE' ? (
-                          <Icon name="download"/>
-                        ) : (
-                          <span className="text-danger">{error.name}</span>
-                        ))
-                      ) : (
-                        value
+                      { _.size(queued_operations) ? (
+                        <Icon name="download"/>
+                      ) : ( error ? ( error.name === 'REQUEST_IN_QUEUE' ?
+                        <Icon name="download"/>
+                        : (<span className="text-danger">{error.name}</span>)
+
+                          ) : (
+                            value
+                          )
                       )}
                   </Loader>
               </Grid.Column>
@@ -198,21 +210,40 @@ class ResourceRow extends Component {
 const makeGetRowState = () => createSelector(
   getResourceInfos,
   getResValue,
-  (state) => state.devices.active.infos.id,
-  (resource, res_value, did) => {
+  (state) => state.devices.active.id,
+  (state) => state.devices.observations.list,
+  (resource, res_value, did, observations) => {
       return {
           did: did,
           resource: resource,
+          isObserved: !!_.find(observations, {id: `${did}:/${resource.object_id}/${resource.instance_id}/${resource.id}`}),
           ...res_value
       }
   }
 );
 
+const makeGetOwnQueuedReq = () => createSelector (
+  (state, props) => state.devices.active.id,
+  (state, props) => props.oid,
+  (state, props) => props.iid,
+  (state, props) => props.rid,
+  (state) => state.devices.queued_req,
+  (did, oid, iid, rid, qreqs) => {
+      const list = _.filter(qreqs, {did: did, oid: oid, iid: iid, rid: rid});
+      // we cannot return directly the result of filter because it return by default an
+      // empty array and the application is expecting an object
+      return _.size(list) ? list : null
+  }
+);
+
+
 const mapStateToProps = () => {
     const getRowState = makeGetRowState();
+    const getOwnQueuedReq = makeGetOwnQueuedReq();
     return (state, props) => {
         return {
-            row_state: getRowState(state, props)
+            row_state: getRowState(state, props),
+            queued_operations: getOwnQueuedReq(state, props)
         }
     }
 };

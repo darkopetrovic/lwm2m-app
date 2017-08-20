@@ -6,6 +6,9 @@ import ObjectsReducer from './reducer_objects';
 import ResourcesReducer from './reducer_resources';
 import DeviceModelsReducer from './reducer_devicemodels';
 import ActionsReducer from './reducer_actions';
+import OwnersReducer from './reducer_owners';
+import ToastsReducer from './reducer_toasts';
+import LayoutReducer from './reducer_layout';
 
 // main reducers
 const reducers = combineReducers({
@@ -15,7 +18,10 @@ const reducers = combineReducers({
     objects: ObjectsReducer,
     resources: ResourcesReducer,
     devicemodels: DeviceModelsReducer,
-    actions: ActionsReducer
+    actions: ActionsReducer,
+    owners: OwnersReducer,
+    toasts: ToastsReducer,
+    layout: LayoutReducer
 });
 
 export default reducers;

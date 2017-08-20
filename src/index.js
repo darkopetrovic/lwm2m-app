@@ -10,9 +10,10 @@ import promiseMiddleware from 'redux-promise-middleware';
 import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { syncHistoryWithStore } from 'react-router-redux'
+import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk';
-import reducers from "./reducers";
+import reducers from "./reducers"
+import {createLogger} from 'redux-logger'
 
 // Containers
 import Full from './containers/Full/'
@@ -20,22 +21,38 @@ import Full from './containers/Full/'
 let middlewares = [];
 
 // Build the middleware for intercepting and dispatching navigation actions
-//const router_Middleware = routerMiddleware(history);
-//middlewares.push(router_Middleware);
+
 
 middlewares.push(promiseMiddleware());
 middlewares.push(freeze);
 middlewares.push(thunk);
 
+if (process.env.NODE_ENV === `development`) {
+    const logger = createLogger({
+        diff: true,
+        collapsed: true,
+        predicate: (getState, action) => action.type.indexOf('@@redux-form') < 0
+    });
+
+
+    middlewares.push(logger);
+}
+
+let history = createHashHistory();
+const router_Middleware = routerMiddleware(history);
+middlewares.push(router_Middleware);
+
 let socket = io('http://localhost:5000');
 let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
 middlewares.push(socketIoMiddleware);
+
 
 const store = createStore(reducers, composeWithDevTools(
   applyMiddleware(...middlewares)
 ));
 
-const history = syncHistoryWithStore(createHashHistory(), store);
+history = syncHistoryWithStore(history, store);
+
 
 ReactDOM.render((
   <Provider store={store}>

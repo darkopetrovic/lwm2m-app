@@ -32,7 +32,7 @@ class TabsObjects extends Component {
         // Group device's objects into separate tabs
         _.map(device_objects_id, oid => {
 
-            // find the device's object inside the global objects array
+            // find the device's object inside the general objects list
             // to find the owner of the object
             let obj = _.find(objects, {id: oid.toString()});
 
@@ -43,7 +43,7 @@ class TabsObjects extends Component {
                         id: obj.owner.id,
                         menuItem: {
                             key: obj.owner.id,
-                            icon: 'users',
+                            icon: 'factory',
                             content: obj.owner.name
                         },
                         objects_ids: []
@@ -52,6 +52,21 @@ class TabsObjects extends Component {
 
                 let tab = _.find(this.panes, {id: obj.owner.id});
                 tab.objects_ids.push(parseInt(obj.id));
+            } else {
+                // this is an unknow object => create the Unknow tab
+                if(!_.find(this.panes, {id: 'unknow'})) {
+                    this.panes.push({
+                        id: 'unknow',
+                        menuItem: {
+                            key: 'unknow',
+                            icon: 'question',
+                            content: 'Unknow'
+                        },
+                        objects_ids: []
+                    });
+                }
+                let tab = _.find(this.panes, {id: 'unknow'});
+                tab.objects_ids.push(parseInt(oid));
             }
         });
 

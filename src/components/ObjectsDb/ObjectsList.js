@@ -4,21 +4,21 @@ import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 import {
     Button, Divider, Dropdown,
-    Header, Icon, Input, Item, Label, Loader, Menu, Popup, Segment,
+    Header, Icon, Input, Item, Label, Loader, Menu, Modal, Popup, Segment,
 } from "semantic-ui-react";
 import {bindActionCreators} from "redux";
 import {
-    setSelectedObject, fetchObjects,
+    fetchObjects, SELECT_OBJECT,
 } from "../../actions/actions_objectdb";
 import InfiniteScroll from 'react-infinite-scroller';
-import ResourcesList from "./ObjectResourcesList";
 import Grid from "semantic-ui-react/dist/es/collections/Grid/Grid";
-import ObjectEdit from "./ObjectEdit";
+import ObjectForm from "./ObjectForm";
 import {getSelectedObject} from "../../selectors/selectors_objects";
 import classNames from 'classnames';
 
 import {makeDebugger} from '../../utils/debug';
 import {fetchOwners} from "../../actions/actions_owners";
+import ObjectsListItem from "./ObjectsListItem";
 const debug = makeDebugger('objectslist');
 
 class ObjectsList extends Component {
@@ -39,21 +39,25 @@ class ObjectsList extends Component {
             current_action: null,
             searchTerm: "",
             filter_owner: null,
-            popup_edit_isopen: []
+            form_open: false
         };
 
         this.getNextItems = this.getNextItems.bind(this);
         this.onSearchInput = this.onSearchInput.bind(this);
         this.onFilterSelect = this.onFilterSelect.bind(this);
-        this.handlePopupActions = this.handlePopupActions.bind(this);
         this.clearSearch = this.clearSearch.bind(this);
 
     }
 
-    componentDidMount() {
-        debug('componentDidMount()');
+    componentWillMount() {
+        debug('componentWillMount()');
         this.props.fetchObjects();
         this.props.fetchOwners();
+    }
+
+
+    componentDidMount() {
+        debug('componentDidMount()');
     }
 
     componentWillUnmount() {
@@ -64,14 +68,18 @@ class ObjectsList extends Component {
         debug('componentWillReceiveProps()', nextProps, nextState);
         const nbele = _.size(nextProps.objects);
         const {per_page} = this.state;
-        if(nbele && !this.state.displayed_data.length){
+
+        const newObjectAdded = nbele > _.size(this.props.objects);
+        if(nbele && !this.state.displayed_data.length || newObjectAdded){
             // first time, populate filtered_data with all objects
             this.setState({
                 nb_elements: nbele,
                 nb_pages: _.ceil(nbele/per_page),
                 filtered_data: nextProps.objects,
-                current_page: 1
-            });
+                current_page: 1,
+                displayed_data: [],
+                form_open: false
+            }, this.getNextItems);
         }
     }
 
@@ -164,25 +172,33 @@ class ObjectsList extends Component {
         this.setState({filter_owner: null});
     }
 
-    /**
-     * The Open and Close events of Popups are handled by this function.
-     * @param event     Event. Can be either 'open' or 'close'
-     * @param action    Identify the type of the popup. Can be either 'edit_object' or 'view_resources'
-     * @param id        Object ID to identify the popup itself
-     */
-    handlePopupActions(event, action, id){
-        debug('handlePopupActions', event, action, id);
-        if(event === 'open'){
-            this.props.setSelectedObject(id);
-            this.setState({current_action: action, popup_edit_open: true});
-        } else if (event === 'close'){
-            if(this.props.selected_object.id === id &&
-                this.state.current_action === action){
-                this.props.setSelectedObject(null);
-                this.setState({current_action: null, popup_edit_open: false});
-            }
-        }
+    onFormClose() {
+        this.props.dispatch({
+            type: SELECT_OBJECT,
+            payload: null
+        });
+        this.setState({form_open: false})
     }
+    //
+    // /**
+    //  * The Open and Close events of Popups are handled by this function.
+    //  * @param event     Event. Can be either 'open' or 'close'
+    //  * @param action    Identify the type of the popup. Can be either 'edit_object' or 'view_resources'
+    //  * @param id        Object ID to identify the popup itself
+    //  */
+    // handlePopupActions(event, action, id){
+    //     debug('handlePopupActions', event, action, id);
+    //     if(event === 'open'){
+    //         this.props.setSelectedObject(id);
+    //         this.setState({current_action: action, popup_edit_open: true});
+    //     } else if (event === 'close'){
+    //         if(this.props.selected_object.id === id &&
+    //             this.state.current_action === action){
+    //             this.props.setSelectedObject(null);
+    //             this.setState({current_action: null, popup_edit_open: false});
+    //         }
+    //     }
+    // }
 
     renderObjects() {
         const {displayed_data} = this.state;
@@ -193,94 +209,8 @@ class ObjectsList extends Component {
         }
 
         return _.map(displayed_data, o => {
-
-            const {current_action} = this.state;
-            const {selected_object} = this.props;
-
-            const editBtnClass = classNames({
-                'ui icon right floated left labeled button mini': true,
-                'basic': !(current_action === 'edit_object' && selected_object && selected_object.id === o.id),
-                'blue': current_action === 'edit_object' && selected_object && selected_object.id === o.id
-            });
-
-            const resourcesBtnClass = classNames({
-                'ui icon right floated right labeled button mini': true,
-                'basic': !(current_action === 'view_resources' && selected_object && selected_object.id === o.id),
-                'blue': current_action === 'view_resources' && selected_object && selected_object.id === o.id
-            });
-
-
               return (
-                <Item  key={o.id} className="object-list-row" >
-                    <Item.Content>
-                        <Segment style={{ width: 100, height: 100 }}
-                                 floated='left' textAlign="center">
-                            <Header as='h2'>
-                                {o.id}
-                                <Header.Subheader>
-                                    <Icon name='cube' size="big" color="grey"/>
-                                </Header.Subheader>
-                            </Header>
-                        </Segment>
-                        <Item.Header as='a'>{o.name || o.shortname}</Item.Header>
-                        <Item.Meta>
-                            <span className='cinema'>{o.shortname}</span>
-                        </Item.Meta>
-                        <Item.Description>
-                            {o.description || "Please add a description"}
-                            </Item.Description>
-                        <Item.Extra>
-                            {/* Using the raw html code for the button because the
-                            Semantic Button Component perform bad here
-                            (because there is multiple button?) */}
-
-                            <Popup
-                              trigger={
-                                  <button className={resourcesBtnClass}>
-                                      <i className="right arrow icon" />View resources
-                                  </button>
-                              }
-                              on='click'
-                              position='right center'
-                              className="resources-popup-container"
-                              // open={this.props.selected_object.id===o.id}
-                              onClose={() => this.handlePopupActions('close', 'view_resources', o.id)}
-                              onOpen={() => this.handlePopupActions('open', 'view_resources', o.id)}
-                            >
-                                <Popup.Header as="h3">Resources list</Popup.Header>
-                                <Popup.Content>
-                                    <ResourcesList per_page="5"/>
-                                </Popup.Content>
-                            </Popup>
-
-                            <Popup
-                              key="1asdf"
-                              trigger={
-                                  <button className={editBtnClass}>
-                                      <i className="edit icon" />Edit
-                                  </button>
-                              }
-                              on='click'
-                              position='bottom center'
-                              className="popup-object-edit"
-                              open={this.props.selected_object.id===o.id}
-                              onClose={() => this.handlePopupActions('close', 'edit_object', o.id)}
-                              onOpen={() => this.handlePopupActions('open', 'edit_object', o.id)}
-                            >
-                                <Popup.Header as="h3">Edit object</Popup.Header>
-                                <Popup.Content>
-                                    <ObjectEdit />
-                                </Popup.Content>
-                            </Popup>
-
-                            <button className="ui basic icon right floated left labeled button mini danger">
-                                <i className="remove red icon" />Delete
-                            </button>
-
-                            <Label><Icon name='user' />{o.owner && o.owner.name}</Label>
-                        </Item.Extra>
-                    </Item.Content>
-                </Item>
+                <ObjectsListItem object_key={o.id} key={o.id}/>
               );
           }
         );
@@ -289,8 +219,8 @@ class ObjectsList extends Component {
     render() {
         debug('render()');
 
-        const {fetching, objects, owners} = this.props;
-        const {hasMoreItems, searchTerm, filter_owner, nb_elements} = this.state;
+        const {fetching, objects, owners, selected_element} = this.props;
+        const {hasMoreItems, searchTerm, filter_owner, nb_elements, form_open} = this.state;
 
         let list_owner = _.map(owners, o => {
             return {
@@ -301,8 +231,39 @@ class ObjectsList extends Component {
 
         list_owner.push({text: 'None', value: 0});
 
+        // () => this.refs.objectForm.getWrappedInstance().submit()
+
         return (
           <div>
+              <Header as='h1' block>
+                  <Icon name='cubes' />
+                  <Header.Content >
+                      Objects
+                      <Header.Subheader>
+                          LwM2M Objects
+                      </Header.Subheader>
+                  </Header.Content>
+              </Header>
+
+              <Modal size="small" dimmer={false}
+                     open={!!selected_element || form_open}
+                     onClose={() => this.onFormClose()}
+                     closeOnDocumentClick
+              >
+                  <Modal.Header>{selected_element ? 'Edit' : 'Add'} Object</Modal.Header>
+                  <Modal.Content>
+                      <ObjectForm submitRef={submit => this.submit = submit} />
+                  </Modal.Content>
+                  <Modal.Actions>
+                      <Button color='black'
+                              onClick={() => this.onFormClose()}>
+                          Close
+                      </Button>
+                      <Button positive icon='checkmark' labelPosition='right'
+                              content="Save" onClick={() => this.submit()}/>
+                  </Modal.Actions>
+              </Modal>
+
 
               <Segment >
                   <Grid divided='vertically'>
@@ -329,24 +290,32 @@ class ObjectsList extends Component {
                           </Grid.Column>
 
                           <Grid.Column width={3}>
-                              <Button content='Clear' icon='eraser'
-                                      labelPosition='left' basic
+                              <Button fluid content='Clear' icon='eraser'
+                                      labelPosition='left'
                                       onClick={e => this.clearSearch()} />
                           </Grid.Column>
 
 
                       </Grid.Row>
                       <Grid.Row style={{paddingTop: '0', paddingBottom: '0'}}>
-                          <Grid.Column width={16}>
+                          <Grid.Column width={12}>
                               <Label basic>
                                   <Icon name='clone' />
                                   Filtered elements
                                   <Label.Detail>{nb_elements}</Label.Detail>
                               </Label>
                           </Grid.Column>
+
+                          <Grid.Column width={4}>
+                              <Button fluid content='Add object'
+                                      icon='plus' labelPosition='left'
+                                      onClick={() => this.setState({form_open: true})}
+                              />
+                          </Grid.Column>
                       </Grid.Row>
                   </Grid>
               </Segment>
+
 
               {!_.size(objects) ? (
                 <div>
@@ -395,18 +364,13 @@ function mapStateToProps(state) {
         objects: state.objects.list,
         fetching: state.objects.isFetching,
         selected_object: getSelectedObject(state),
-        owners: state.objects.owners
+        owners: state.objects.owners,
+        selected_element: state.objects.selected
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(
-      {
-          fetchObjects,
-          setSelectedObject,
-          fetchOwners
-      }, dispatch);
+    return {dispatch, ...bindActionCreators({fetchObjects, fetchOwners}, dispatch)};
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(ObjectsList);

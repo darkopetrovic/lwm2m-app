@@ -39,15 +39,19 @@ class Sidebar extends Component {
                 </li>
 
                 <li className="nav-item">
-                  <NavLink to={'/objectsdb'} className="nav-link" activeClassName="active"><i className="icon-layers" /> Objects</NavLink>
+                  <NavLink to={'/objectsdb'} className="nav-link" activeClassName="active"><i className="fa fa-cubes" /> Objects</NavLink>
                 </li>
 
                 <li className="nav-item">
-                  <NavLink to={'/resourcesdb'} className="nav-link" activeClassName="active"><i className="icon-layers" /> Resources</NavLink>
+                  <NavLink to={'/resourcesdb'} className="nav-link" activeClassName="active"><i className="icon-list" /> Resources</NavLink>
                 </li>
 
                   <li className="nav-item">
-                      <NavLink to={'/devicemodels'} className="nav-link" activeClassName="active"><i className="icon-star" /> Device Models</NavLink>
+                      <NavLink to={'/devicemodels'} className="nav-link" activeClassName="active"><i className="fa fa-clone" /> Device Models</NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                      <NavLink to={'/owners'} className="nav-link" activeClassName="active"><i className="icon-user" /> Owners</NavLink>
                   </li>
 
               </ul>

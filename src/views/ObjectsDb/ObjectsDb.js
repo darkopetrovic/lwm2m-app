@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 
-import {Container, Row, Col} from 'reactstrap';
 import ObjectsList from "../../components/ObjectsDb/ObjectsList";
-import ResourcesList from "../../components/ObjectsDb/ObjectResourcesList";
 import {Grid} from "semantic-ui-react";
 
 class ObjectsDb extends Component {
@@ -11,28 +9,17 @@ class ObjectsDb extends Component {
 
         return (
           <div className="animated fadeIn">
-              {/*<Row>*/}
-                  {/*<Col className="overflowNone">*/}
-                      {/*<ObjectsList />*/}
-                  {/*</Col>*/}
-                  {/*<Col>*/}
-
-                  {/*</Col>*/}
-              {/*</Row>*/}
-
               <Grid>
                   <Grid.Row>
-                      <Grid.Column className="overflowNone" width={8}>
+                      <Grid.Column className="overflowNone" width={10}>
                           <ObjectsList />
                       </Grid.Column>
 
-                      <Grid.Column width={8}>
+                      <Grid.Column width={6}>
 
                       </Grid.Column>
                   </Grid.Row>
               </Grid>
-
-
           </div>
         )
     }

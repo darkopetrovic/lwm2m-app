@@ -6,5 +6,6 @@ const routes = {
     '/objectsdb': 'Objects',
     '/resourcesdb': 'Resources',
     '/devicemodels': 'Device Models',
+    '/owners': 'Owners',
 };
 export default routes;

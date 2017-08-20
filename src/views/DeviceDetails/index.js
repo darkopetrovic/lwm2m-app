@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchDevice, readResourceValue } from "../../actions";
+import {fetchDevice, fetchQueuedRequests, readResourceValue} from "../../actions";
 import { fetchObjects, fetchResources } from "../../actions/actions_objectdb";
 import { bindActionCreators } from "redux";
 
@@ -23,6 +23,13 @@ class DeviceDetails extends Component {
         this.props.fetchObjects();
         this.props.fetchResources();
         this.props.fetchDeviceObservations(id);
+        this.props.fetchQueuedRequests();
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch({
+            type: 'CLEAR_ACTIVE_DEVICE'
+        })
     }
 
     render() {
@@ -42,9 +49,15 @@ class DeviceDetails extends Component {
     }
 }
 
+// function mapStateToProps({devices}) {
+//     return {
+//         device_info: devices.active.infos
+//     }
+// }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ fetchDevice, fetchObjects, fetchResources, fetchDeviceObservations }, dispatch);
+    return {dispatch, ...bindActionCreators({ fetchDevice, fetchObjects,
+        fetchResources, fetchDeviceObservations, fetchQueuedRequests }, dispatch)};
 }
 
 export default connect(null, mapDispatchToProps)(DeviceDetails);
