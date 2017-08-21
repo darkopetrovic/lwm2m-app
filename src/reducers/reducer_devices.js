@@ -174,7 +174,7 @@ export default function(state = initState, action) {
             newState = dotProp.set(newState, `active.res_values.${resId}.value`, res.value);
 
             if(action.type === `${OBSERVE_RESOURCE_VALUE}_${FULFILLED}` && !res.error){
-                newState = addNewObservation(newState, res.did, res.oid, res.iid, res.rid);
+                newState = addNewObservation(newState, parseInt(res.did), parseInt(res.oid), parseInt(res.iid), parseInt(res.rid));
             }
 
             if(res.error && res.error.name === 'REQUEST_IN_QUEUE'){
@@ -307,7 +307,7 @@ export default function(state = initState, action) {
             if(res.operation === 'read' || res.operation === 'write' || res.operation === 'observe'){
 
                 if(res.operation === 'observe'){
-                    newState = addNewObservation(newState, res.did, res.oid, res.iid, res.rid);
+                    newState = addNewObservation(newState, parseInt(res.did), parseInt(res.oid), parseInt(res.iid), parseInt(res.rid));
                 }
 
                 // read instance: {"e":[{"n":"5701","sv":"%RH"},{"n":"5603","v":0.00},{"n":"5604","v":100.00},{"n":"5601","v":41.40},{"n":"5602","v":90.00}]}
