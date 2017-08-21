@@ -15,6 +15,8 @@ import thunk from 'redux-thunk';
 import reducers from "./reducers"
 import {createLogger} from 'redux-logger'
 
+import config from './config';
+
 // Containers
 import Full from './containers/Full/'
 // add the middlewares
@@ -42,7 +44,7 @@ let history = createHashHistory();
 const router_Middleware = routerMiddleware(history);
 middlewares.push(router_Middleware);
 
-let socket = io('http://localhost:5000');
+let socket = io(config.SOCKET_URL);
 let socketIoMiddleware = createSocketIoMiddleware(socket, "server/");
 middlewares.push(socketIoMiddleware);
 

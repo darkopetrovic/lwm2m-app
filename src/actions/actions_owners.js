@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = "http://localhost:5000/api";
+import config from '../config';
+const ROOT_URL = config.API_URL;
 
 export const FETCH_OWNERS  = "FETCH_OWNERS";
 export const FETCH_OWNER   = "FETCH_OWNER";

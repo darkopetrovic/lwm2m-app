@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+import config from '../config';
+
 export const FETCH_ACTIONS  = "FETCH_ACTIONS";
 export const ADD_ACTION  = "ADD_ACTION";
 export const DELETE_ACTION  = "DELETE_ACTION";
 export const UPDATE_ACTION  = "UPDATE_ACTION";
 
-const ROOT_URL = "http://localhost:5000/api";
+const ROOT_URL = config.API_URL;
 
 export function fetchActions() {
     const request = axios.get(`${ROOT_URL}/actions`);

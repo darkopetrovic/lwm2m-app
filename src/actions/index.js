@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import fake_device from './fake_devices.json';
 
+import config from '../config';
 
 export const FETCH_DEVICES  = "FETCH_DEVICES";
 export const FETCH_DEVICE   = "FETCH_DEVICE";
@@ -14,7 +15,7 @@ export const DISCOVER_OBJECT_RESOURCES  = "DISCOVER_OBJECT_RESOURCES";
 export const READ_OBJECT_RESOURCES  = "READ_OBJECT_RESOURCES";
 export const FETCH_QUEUED_REQUESTS  = "FETCH_QUEUED_REQUESTS";
 
-const ROOT_URL = "http://localhost:5000/api";
+const ROOT_URL = config.API_URL;
 
 export function fetchDevices() {
     const request = axios.get(`${ROOT_URL}/devices`);
